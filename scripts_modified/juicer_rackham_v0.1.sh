@@ -966,7 +966,7 @@ fi
 
 if [ -z "$genomePath" ]
 then
-    #If no path to genome is give, use genome ID as default.
+    #If no path to genome is given, use genome ID as default.
     genomePath=$genomeID
 fi
 
@@ -1205,7 +1205,7 @@ jid=`sbatch <<- FINCLN1 | egrep -o -e "\b[0-9]+$"
 #SBATCH -c 1
 #SBATCH --ntasks=1
 #SBATCH -J "${groupname}_prep_done"
-#SBATCH -d $dependhic30
+#SBATCH -d ${dependhic30}
 $userstring			
 
 	date
