@@ -848,13 +848,13 @@ EOF`
 
 # Not in final, dedup, or postproc
 #if [ -z $final ] && [ -z $dedup ] && [ -z $postproc ]
-then
-    if [ -z $merge ]
-    then
-	sbatch_wait="#SBATCH -d $dependmergecheck"
-    else
+#then
+#    if [ -z $merge ]
+#    then
+#	sbatch_wait="#SBATCH -d $dependmergecheck"
+#    else
         sbatch_wait=""
-    fi
+#    fi
     
     # merge the sorted files into one giant file that is also sorted. jid=`sbatch <<- MRGSRT | egrep -o -e "\b[0-9]+$"
     
@@ -925,14 +925,14 @@ EOF`
 fi
 
 # Remove the duplicates from the big sorted file ###! OBS!
-if [ -z $final ] && [ -z $postproc ]
-then
-    if [ -z $dedup ]
-    then
-        sbatch_wait="#SBATCH -d $dependmrgsrt"
-    else
+#if [ -z $final ] && [ -z $postproc ]
+#then
+#    if [ -z $dedup ]
+#    then
+#        sbatch_wait="#SBATCH -d $dependmrgsrt"
+#    else
         sbatch_wait=""
-    fi
+#    fi
     # Guard job for dedup. this job is a placeholder to hold any job submitted after dedup.
     # We keep the ID of this guard, so we can later alter dependencies of inner dedupping phase.
     # After dedup is done, this job will be released. 
@@ -1015,19 +1015,19 @@ MSPLITWAIT`
 
     dependmsplit="afterok:$jid"
     sbatch_wait="#SBATCH -d $dependmsplit"
-else
-    sbatch_wait=""
-fi
+#else
+#    sbatch_wait=""
+#fi
 
-if [ -z "$genomePath" ]
-then
-    #If no path to genome is give, use genome ID as default.
-    genomePath=$genomeID
-fi
+#if [ -z "$genomePath" ]
+#then
+    #If no path to genome is given, use genome ID as default.
+#   genomePath=$genomeID
+#fi
 
 #Skip if post-processing only is required
-if [ -z $postproc ]
-    then
+#if [ -z $postproc ]
+#    then
     # Check that dedupping worked properly
     # in ideal world, we would check this in split_rmdups and not remove before we know they are correct
     #awkscript='BEGIN{sscriptname = sprintf("%s/.%s_rmsplit.slurm", debugdir, groupname);}NR==1{if (NF == 2 && $1 == $2 ){print "Sorted and dups/no dups files add up"; printf("#!/bin/bash -l\n#SBATCH -o %s/dup-rm.out\n#SBATCH -e %s/dup-rm.err\n#SBATCH -p %s\n#SBATCH -J %s_msplit0\n#SBATCH -d singleton\n#SBATCH -t 1440\n#SBATCH -c 1\n#SBATCH --ntasks=1\ndate;\nrm %s/*_msplit*_optdups.txt; rm %s/*_msplit*_dups.txt; rm %s/*_msplit*_merged_nodups.txt;rm %s/split*;\ndate\n", debugdir, debugdir, queue, groupname, dir, dir, dir, dir) > sscriptname; sysstring = sprintf("sbatch %s", sscriptname); system(sysstring);close(sscriptname); }else{print "Problem"; print "***! Error! The sorted file and dups/no dups files do not add up, or were empty."}}'
@@ -1241,9 +1241,9 @@ HIC30`
 
     dependhic30="${dependhic}:$jid"
     sbatch_wait="#SBATCH -d $dependhic30"
-else
-    sbatch_wait=""
-fi
+#else
+#    sbatch_wait=""
+#fi
 
 
 jid=`sbatch <<- FINCLN1 | egrep -o -e "\b[0-9]+$"
