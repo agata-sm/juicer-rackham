@@ -67,66 +67,6 @@ shopt -s extglob
 juicer_version="1.6"
 ## Set the following variables to work with your system
 
-# # Aiden Lab specific check
-# isRice=$(host $(hostname) | awk '{if ($1~/rice/) {print 1} else {print 0}; exit}') #'
-# isBCM=$(host $(hostname) | awk '{if ($1~/bcm/) {print 1} else {print 0}; exit}') #'
-# isVoltron=0
-# ## path additionals, make sure paths are correct for your system
-# ## use cluster load commands
-# if [ $isRice -eq 1 ] 
-# then
-#     export PATH=$HOME/bin:$PATH
-#     isNots=$(host $(hostname) | awk '{if ($1~/nots/){print 1}else {print 0}}') #'
-#     if [ $isNots -eq 1 ]
-#     then
-# 	load_bwa="module load  GCCcore/7.3.0 BWA/0.7.17"
-# 	load_java="module load Java/1.8.0_162" 
-# 	load_gpu="module load gcccuda/2016a;module load CUDA/8.0.44;" 
-#     else
-# 	load_bwa="export PATH=/home/ncd4/bwa:$PATH"
-# 	load_java="module load Java/8.0.3.22" 
-# 	load_gpu="module load gcccuda/2016a;module load CUDA/8.0.54;" 
-#     fi
-    
-#     # Juicer directory, contains scripts/, references/, and restriction_sites/
-#     # can also be set in options via -D
-#     juiceDir="/projects/ea14/juicer" ### RICE
-#     # default queue, can also be set in options via -q
-#     queue="commons"
-#     queue_time="24:00:00"
-#     # default long queue, can also be set in options via -l
-#     long_queue="commons"
-#     long_queue_time="24:00:00"
-# elif [ $isBCM -eq 1 ]
-# then    
-#     # Juicer directory, contains scripts/, references/, and restriction_sites/
-#     # can also be set in options via -D
-#     juiceDir="/storage/aiden/juicer/"
-#     # default queue, can also be set in options via -q
-#     queue="mhgcp"
-#     queue_time="1200"
-#     # default long queue, can also be set in options via -l
-#     long_queue="mhgcp"
-#     long_queue_time="3600"
-# else
-#     isVoltron=1
-#     #export PATH=/gpfs0/biobuild/biobuilds-2016.11/bin:$PATH 
-#     # unset MALLOC_ARENA_MAX # on IBM platform this parameter has significant speed efect but may result in memory leaks
-#     load_bwa="spack load bwa@0.7.17 arch=\`spack arch\`"
-#     load_awk="spack load gawk@4.1.4 arch=\`spack arch\`"
-#     load_gpu="spack load cuda@8.0.61 arch=\`spack arch\` && CUDA_VISIBLE_DEVICES=0,1,2,3"
-#     call_gem="/gpfs0/work/neva/gem3-mapper/bin/gem-mapper --3c"
-#     # Juicer directory, contains scripts/, references/, and restriction_sites/
-#     # can also be set in options via -D
-#     juiceDir="/gpfs0/juicer/"
-#     # default queue, can also be set in options
-#     queue="commons"
-#     queue_time="2880"
-#     # default long queue, can also be set in options
-#     long_queue="long"
-#     long_queue_time="7200"
-# fi
-
 
 isRice=0
 isVoltron=0
@@ -385,10 +325,7 @@ then
     alloc_mem=60000
 fi
 
-if [ $isBCM -eq 1 ] || [ $isRice -eq 1 ]
-then
-    alloc_mem=50000
-fi
+
 
 ## Directories to be created and regex strings for listing files
 splitdir=${topDir}"/splits"
@@ -557,8 +494,8 @@ then
 fi
 
 # Not in merge, dedup,  or final stage, i.e. need to split and align files.
-#if [ -z $merge ] && [ -z $final ] && [ -z $dedup ] && [ -z $postproc ]
-#then
+if [ ! -n $merge ] && [ ! -n $final ] && [ ! -n $dedup ] && [ ! -n $postproc ]
+then
     if [ "$nofrag" -eq 0 ]
     then
 	echo -e "(-: Aligning files matching $fastqdir\n in queue $queue to genome $genomeID with site file $site_file"
@@ -844,12 +781,12 @@ EOF`
 	jid=$(echo $jid | egrep -o -e "\b[0-9]+$")
 	dependmergecheck="${dependmerge}:${jid}"
     done
-#fi  # Not in merge, dedup,  or final stage, i.e. need to split and align files.
+fi  # Not in merge, dedup,  or final stage, i.e. need to split and align files.
 
 # Not in final, dedup, or postproc
-#if [ -z $final ] && [ -z $dedup ] && [ -z $postproc ]
+if [ ! -n $final ] && [ ! -n $dedup ] && [ ! -n $postproc ]
 then
-    if [ -z $merge ]
+    if [ ! -n $merge ]
     then
 	sbatch_wait="#SBATCH -d $dependmergecheck"
     else
@@ -922,12 +859,12 @@ EOF`
 
     jid=$(echo $jid | egrep -o -e "\b[0-9]+$")
     dependmrgsrt="afterok:$jid"
-fi
+#fi
 
 # Remove the duplicates from the big sorted file ###! OBS!
-if [ -z $final ] && [ -z $postproc ]
+if [ ! -n $final ] && [ ! -n $postproc ]
 then
-    if [ -z $dedup ]
+    if [ ! -n $dedup ]
     then
         sbatch_wait="#SBATCH -d $dependmrgsrt"
     else
@@ -1019,14 +956,14 @@ else
     sbatch_wait=""
 fi
 
-if [ -z "$genomePath" ]
+if [ ! -n "$genomePath" ]
 then
-    #If no path to genome is give, use genome ID as default.
-    genomePath=$genomeID
+    #If no path to genome is given, use genome ID as default.
+   genomePath=$genomeID
 fi
 
-#Skip if post-processing only is required
-if [ -z $postproc ]
+Skip if post-processing only is required
+if [ ! -n $postproc ]
     then
     # Check that dedupping worked properly
     # in ideal world, we would check this in split_rmdups and not remove before we know they are correct
@@ -1151,7 +1088,7 @@ $userstring
 CONCATFILES`
 
     # if early exit, we stop here, once the stats are calculated
-    if [ ! -z "$earlyexit" ]
+    if [ -n "$earlyexit" ]
     then
 	jid=`sbatch <<- FINCLN1 | egrep -o -e "\b[0-9]+$" 
 #!/bin/bash -l
