@@ -394,7 +394,7 @@ fi
 # If chunk size sent in, split. Otherwise check size before splitting
 if [ $isVoltron -ne 1 ]
 then
-    if [ -z $splitme ]
+    if [ ! -n $splitme ]
     then
     fastqsize=$(ls -lL  ${fastqdir} | awk '{sum+=$5}END{print sum}')
     if [ "$fastqsize" -gt "2592410750" ]
@@ -413,12 +413,9 @@ else
     read1=${splitdir}"/*${read1str}*.fastq"
 fi
 
-if [ -z "$user" ]
-then
-    userstring=""
-else
-    userstring="#SBATCH -A $user"
-fi
+
+userstring="#SBATCH -A $user"
+
 
 echo "userstring is $userstring"
 echo ""
@@ -493,7 +490,7 @@ then
 fi
 
 # Not in merge, dedup,  or final stage, i.e. need to split and align files.
-if [ -z $merge ] && [ -z $final ] && [ -z $dedup ] && [ -z $postproc ]
+if [ ! -n $merge ] && [ ! -n $final ] && [ ! -n $dedup ] && [ ! -n $postproc ]
 then
     if [ "$nofrag" -eq 0 ]
     then
@@ -516,7 +513,7 @@ then
         filename=$(basename $i)
         filename=${filename%.*}
         echo "$filename"      
-                if [ -z "$gzipped" ]
+                if [ ! -n "$gzipped" ]
                 then    
             jid=`sbatch <<- SPLITEND | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
@@ -624,7 +621,7 @@ $userstring
 CNTLIG`
     dependcount="$jid"
 
-    if [ -z "$chimeric" ]
+    if [ ! -n "$chimeric" ]
     then
         # align fastqs
         jid=`sbatch <<- ALGNR1 | egrep -o -e "\b[0-9]+$"
@@ -783,9 +780,9 @@ EOF`
 fi  # Not in merge, dedup,  or final stage, i.e. need to split and align files.
 
 # Not in final, dedup, or postproc
-if [ -z $final ] && [ -z $dedup ] && [ -z $postproc ]
+if [ ! -n $final ] && [ ! -n $dedup ] && [ ! -n $postproc ]
 then
-    if [ -z $merge ]
+    if [ ! -n $merge ]
     then
     sbatch_wait="#SBATCH -d $dependmergecheck"
     else
@@ -861,9 +858,9 @@ EOF`
 fi
 
 # Remove the duplicates from the big sorted file ###! OBS!
-if [ -z $final ] && [ -z $postproc ]
+if [ ! -n $final ] && [ ! -n $postproc ]
 then
-    if [ -z $dedup ]
+    if [ ! -n $dedup ]
     then
         sbatch_wait="#SBATCH -d $dependmrgsrt"
     else
@@ -955,14 +952,14 @@ else
     sbatch_wait=""
 fi
 
-if [ -z "$genomePath" ]
+if [ ! -n "$genomePath" ]
 then
     #If no path to genome is give, use genome ID as default.
     genomePath=$genomeID
 fi
 
 #Skip if post-processing only is required
-if [ -z $postproc ]
+if [ ! -n $postproc ]
     then
     # Check that dedupping worked properly
     # in ideal world, we would check this in split_rmdups and not remove before we know they are correct
@@ -1087,7 +1084,7 @@ $userstring
 CONCATFILES`
 
     # if early exit, we stop here, once the stats are calculated
-    if [ ! -z "$earlyexit" ]
+    if [ -n "$earlyexit" ]
     then
     jid=`sbatch <<- FINCLN1 | egrep -o -e "\b[0-9]+$" 
 #!/bin/bash -l
