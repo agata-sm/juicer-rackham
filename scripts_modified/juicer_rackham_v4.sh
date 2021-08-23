@@ -922,7 +922,7 @@ EOF`
 
     jid=$(echo $jid | egrep -o -e "\b[0-9]+$")
     dependmrgsrt="afterok:$jid"
-fi
+#fi
 
 # Remove the duplicates from the big sorted file ###! OBS!
 #if [ -z $final ] && [ -z $postproc ]
