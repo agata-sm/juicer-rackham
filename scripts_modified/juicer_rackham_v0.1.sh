@@ -529,7 +529,7 @@ then
                 if [ -z "$gzipped" ]
                 then	
 
-            jid=`sbatch <<- SPLITEND | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- SPLITEND | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 $userstring
 #SBATCH -p $queue
@@ -547,7 +547,7 @@ SPLITEND`
   
 
         else
-            jid=`sbatch <<- SPLITEND | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- SPLITEND | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 $userstring
 #SBATCH -p $queue
@@ -620,7 +620,7 @@ SPLITEND`
 	touchfile=${tmpdir}/${jname}
 
 	# count ligations
-	jid=`sbatch <<- CNTLIG |  egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- CNTLIG |  egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH -t $queue_time
@@ -639,7 +639,7 @@ CNTLIG`
 	if [ -z "$chimeric" ]
 	then
 	    # align fastqs
-	    jid=`sbatch <<- ALGNR1 | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- ALGNR1 | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH -o $debugdir/align1-%j.out
@@ -694,7 +694,7 @@ ALGNR1`
 	fi
 
 	# wait for alignment, chimeric read handling
-	jid=`sbatch <<- MRGALL | egrep -o -e "\b[0-9]+$"#!/bin/bash -l
+jid=`sbatch <<- MRGALL | egrep -o -e "\b[0-9]+$"#!/bin/bash -l
 #SBATCH -p $long_queue
 #SBATCH -o $debugdir/merge-%j.out
 #SBATCH -e $debugdir/merge-%j.err
@@ -769,7 +769,7 @@ MRGALL`
 	msg="***! Error in job ${ARRAY[$i]}  Type squeue -j ${JIDS[$i]} to see what happened"
 	
 	# check that alignment finished successfully
-	jid=`sbatch <<- EOF
+jid=`sbatch <<- EOF
 #!/bin/bash -l
 #SBATCH -o $debugdir/aligncheck-%j.out
 #SBATCH -e $debugdir/aligncheck-%j.err
@@ -821,7 +821,7 @@ then
     fi
 
 
-    jid=`sbatch <<- EOF
+jid=`sbatch <<- EOF
 #!/bin/bash -l
 #SBATCH -o $debugdir/fragmerge-%j.out
 #SBATCH -e $debugdir/fragmerge-%j.err
@@ -883,7 +883,7 @@ then
     # Guard job for dedup. this job is a placeholder to hold any job submitted after dedup.
     # We keep the ID of this guard, so we can later alter dependencies of inner dedupping phase.
     # After dedup is done, this job will be released. 
-    guardjid=`sbatch <<- DEDUPGUARD | egrep -o -e "\b[0-9]+$"
+guardjid=`sbatch <<- DEDUPGUARD | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH -o $debugdir/dedupguard-%j.out
@@ -902,7 +902,7 @@ DEDUPGUARD`
     dependguard="afterok:$guardjid"
 
     # if jobs succeeded, kill the cleanup job, remove the duplicates from the big sorted file
-    jid=`sbatch <<- DEDUP | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- DEDUP | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH --mem-per-cpu=2G
@@ -939,7 +939,7 @@ DEDUP`
     scontrol update JobID=$guardjid dependency=afterok:$jid
 
     #Wait for all parts of split_rmdups to complete:
-    jid=`sbatch <<- MSPLITWAIT | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- MSPLITWAIT | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH -o $debugdir/post_dedup-%j.out
@@ -979,7 +979,7 @@ awkscript='BEGIN{sscriptname = sprintf("%s/.%s_rmsplit.slurm", debugdir, groupna
 
 #awkscript='BEGIN{sscriptname = sprintf("%s/.%s_rmsplit.slurm", debugdir, groupname);}NR==1{if (NF == 2 && $1 == $2 ){print "Sorted and dups/no dups files add up"; printf("#!/bin/bash -l\n#SBATCH -o %s/dup-rm.out\n#SBATCH -e %s/dup-rm.err\n#SBATCH -p %s\n#SBATCH -J %s_msplit0\n#SBATCH -d singleton\n#SBATCH -t 1440\n#SBATCH -n 1\n#SBATCH --ntasks=1\n#SBATCH -A snic2019-8-209\ndate;\nrm %s/*_msplit*_optdups.txt; rm %s/*_msplit*_dups.txt; rm %s/*_msplit*_merged_nodups.txt;rm %s/split*;\ndate\n", debugdir, debugdir, queue, groupname, dir, dir, dir, dir) > sscriptname; sysstring = sprintf("sbatch %s", sscriptname); system(sysstring);close(sscriptname); }else{print "Problem"; print "***! Error! The sorted file and dups/no dups files do not add up, or were empty."}}'
 
-    jid=`sbatch <<- DUPCHECK | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- DUPCHECK | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH -o $debugdir/dupcheck-%j.out
@@ -1001,7 +1001,7 @@ $userstring
 DUPCHECK`
     sbatch_wait="#SBATCH -d afterok:$jid"
 
-    jid=`sbatch <<- PRESTATS | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- PRESTATS | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH -o $debugdir/prestats-%j.out
@@ -1028,7 +1028,7 @@ $userstring
 PRESTATS`
 
     sbatch_wait0="#SBATCH -d afterok:$jid"
-    jid=`sbatch <<- STATS | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- STATS | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $long_queue
 #SBATCH -o $debugdir/stats-%j.out
@@ -1054,7 +1054,7 @@ STATS`
     sbatch_wait1="#SBATCH -d afterok:$jid"
 
     dependstats="afterok:$jid"
-    jid=`sbatch <<- STATS30 | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- STATS30 | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH -o $debugdir/stats30-%j.out
@@ -1074,7 +1074,7 @@ STATS30`
     dependstats30="afterok:$jid"
     sbatch_wait1="${sbatch_wait1}:$jid"
     # This job is waiting on deduping, thus sbatch_wait (vs sbatch_wait0 or 1) 
-    jid=`sbatch <<- CONCATFILES | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- CONCATFILES | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH -o $debugdir/stats30-%j.out
@@ -1101,7 +1101,7 @@ CONCATFILES`
     # if early exit, we stop here, once the stats are calculated
     if [ ! -z "$earlyexit" ]
     then
-	jid=`sbatch <<- FINCLN1 | egrep -o -e "\b[0-9]+$" 
+jid=`sbatch <<- FINCLN1 | egrep -o -e "\b[0-9]+$" 
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH --mem=2G
@@ -1124,7 +1124,7 @@ FINCLN1`
 	exit 0
     fi
     
-    jid=`sbatch <<- HIC | egrep -o -e "\b[0-9]+$"
+jid=`sbatch <<- HIC | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $long_queue
 #SBATCH -o $debugdir/hic-%j.out
@@ -1157,8 +1157,7 @@ HIC`
 
     dependhic="afterok:$jid"
 
-    jid=`sbatch <<- HIC30 | egrep -o -e "\b[0-9]+$"
-
+jid=`sbatch <<- HIC30 | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p $long_queue
 #SBATCH -o $debugdir/hic30-%j.out
@@ -1197,7 +1196,6 @@ fi
 #removed arrows
 
 jid=`sbatch <<- FINCLN1 | egrep -o -e "\b[0-9]+$"
-
 #!/bin/bash -l
 #SBATCH -p $queue
 #SBATCH --mem-per-cpu=2G
