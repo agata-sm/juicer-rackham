@@ -387,6 +387,7 @@ fi
 
 ## Create temporary directory, used for sort later
 if [ ! -d "$tmpdir" ] # && [ -z "$final" ] && [ -z "$dedup" ] && [ -z "$postproc" ]; then ############# # changed v 0.2
+then
     mkdir "$tmpdir"
     chmod 777 "$tmpdir"
 fi
