@@ -637,8 +637,8 @@ $userstring
 CNTLIG`
     dependcount="$jid"
 
-	#if [ -z "$chimeric" ]
-	#then
+	if [ -z "$chimeric" ]
+	then
 	    # align fastqs
 jid=`sbatch <<- ALGNR1 | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
@@ -683,9 +683,9 @@ $userstring
 ALGNR1`
 
 	    dependalign="afterok:$jid:$dependcount"
-	#else
+	else
 	    dependalign="afterok:$dependcount"
-	#fi
+	fi
 
 	#if [ $isVoltron -eq 1 ]
 	#then
