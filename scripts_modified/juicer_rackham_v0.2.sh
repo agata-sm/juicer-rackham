@@ -504,9 +504,9 @@ then
     rm $errorfile
 fi
 
-# Not in merge, dedup,  or final stage, i.e. need to split and align files.
-if [ -z $merge ] && [ -z $final ] && [ -z $dedup ] && [ -z $postproc ]
-then
+# Not in merge, dedup,  or final stage, i.e. need to split and align files. #changed here
+#if [ -z $merge ] && [ -z $final ] && [ -z $dedup ] && [ -z $postproc ]
+#then
     if [ "$nofrag" -eq 0 ]
     then
 	echo -e "(-: Aligning files matching $fastqdir\n in queue $queue to genome $genomeID with site file $site_file"
@@ -637,8 +637,8 @@ $userstring
 CNTLIG`
     dependcount="$jid"
 
-	if [ -z "$chimeric" ]
-	then
+	#if [ -z "$chimeric" ]
+	#then
 	    # align fastqs
 jid=`sbatch <<- ALGNR1 | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
@@ -683,16 +683,16 @@ $userstring
 ALGNR1`
 
 	    dependalign="afterok:$jid:$dependcount"
-	else
+	#else
 	    dependalign="afterok:$dependcount"
-	fi
+	#fi
 
-	if [ $isVoltron -eq 1 ]
-	then
-	    sortthreadstring="--parallel=\$SLURM_JOB_CPUS_PER_NODE"
-	else
+	#if [ $isVoltron -eq 1 ]
+	#then
+	#    sortthreadstring="--parallel=\$SLURM_JOB_CPUS_PER_NODE"
+	#else
 	    sortthreadstring="--parallel=$threads"
-	fi
+	#fi
 
 	# wait for alignment, chimeric read handling
 jid=`sbatch <<- MRGALL | egrep -o -e "\b[0-9]+$"#!/bin/bash -l
@@ -792,7 +792,9 @@ EOF`
 	jid=$(echo $jid | egrep -o -e "\b[0-9]+$")
 	dependmergecheck="${dependmerge}:${jid}"
     done
-fi  # Not in merge, dedup,  or final stage, i.e. need to split and align files.
+#fi  # Not in merge, dedup,  or final stage, i.e. need to split and align files.
+
+##### stopped here
 
 # Not in final, dedup, or postproc
 if [ -z $final ] && [ -z $dedup ] && [ -z $postproc ]
