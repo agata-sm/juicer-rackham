@@ -695,7 +695,8 @@ ALGNR1`
 	#fi
 
 	# wait for alignment, chimeric read handling
-jid=`sbatch <<- MRGALL | egrep -o -e "\b[0-9]+$"#!/bin/bash -l
+jid=`sbatch <<- MRGALL | egrep -o -e "\b[0-9]+$"
+#!/bin/bash -l
 #SBATCH -p $long_queue
 #SBATCH -o $debugdir/merge-%j.out
 #SBATCH -e $debugdir/merge-%j.err
