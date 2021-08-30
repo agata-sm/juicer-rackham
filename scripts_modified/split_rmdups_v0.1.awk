@@ -47,7 +47,8 @@ BEGIN{
 	    close(outname);
 	    close(sscriptname);
 	       
-        cat sscriptname;
+        printf("1st msplit cript is\n")
+        system (cat sscriptname);
 
 	    name++;
 	    tot=0;
@@ -77,7 +78,8 @@ END {
     system(sysstring);
     close(sscriptname);
 
-    cat sscriptname;
+    printf("2nd msplit cript is\n")
+    printf("#!/bin/bash -l\n#SBATCH -o %s/dup-split-%s.out\n#SBATCH -e %s/dup-split-%s.err\n#SBATCH -p %s\n#SBATCH -J %s_msplit0\n#SBATCH -t 1440\n#SBATCH -c 1\n#SBATCH --ntasks=1\n#SBATCH -A ",user,"\ndate;awk -f %s/scripts/dups.awk -v nowobble=1 -v name=%s/%s %s/split%04d;\necho Reads:%s\ndate\n");
 
 
 #	sscriptname = sprintf("%s/.%s_rmsplit.slurm", debugdir, groupname);
