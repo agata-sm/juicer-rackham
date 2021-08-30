@@ -46,9 +46,6 @@ BEGIN{
 	    outname = sprintf("%s/split%04d", dir, name);
 	    close(outname);
 	    close(sscriptname);
-	       
-        printf("1st msplit cript is\n")
-        system (cat sscriptname);
 
 	    name++;
 	    tot=0;
@@ -77,10 +74,6 @@ END {
     sysstring = sprintf("sbatch %s", sscriptname);
     system(sysstring);
     close(sscriptname);
-
-    printf("2nd msplit cript is\n")
-    printf("#!/bin/bash -l\n#SBATCH -o %s/dup-split-%s.out\n#SBATCH -e %s/dup-split-%s.err\n#SBATCH -p %s\n#SBATCH -J %s_msplit0\n#SBATCH -t 1440\n#SBATCH -c 1\n#SBATCH --ntasks=1\n#SBATCH -A ",user,"\ndate;awk -f %s/scripts/dups.awk -v nowobble=1 -v name=%s/%s %s/split%04d;\necho Reads:%s\ndate\n");
-
 
 #	sscriptname = sprintf("%s/.%s_rmsplit.slurm", debugdir, groupname);
 #	printf("#!/bin/bash -l\n#SBATCH -o %s/dup-rm.out\n#SBATCH -e %s/dup-rm.err\n#SBATCH -p %s\n#SBATCH -J %s_msplit0\n#SBATCH -d singleton\n#SBATCH -t 1440\n#SBATCH -c 1\n#SBATCH --ntasks=1\ndate;\nrm %s/*_msplit*_optdups.txt; rm %s/*_msplit*_dups.txt; rm %s/*_msplit*_merged_nodups.txt;rm %s/split*;\ndate\n", debugdir, debugdir, queue, groupname, dir, dir, dir, dir) > sscriptname;
