@@ -71,7 +71,7 @@ END {
 
     sscriptname = sprintf("%s/.%s_msplit.slurm", debugdir, groupname);
     printf("#!/bin/bash -l\n#SBATCH -o %s/dup-merge.out\n#SBATCH -e %s/dup-merge.err\n#SBATCH --mem=50G\n#SBATCH -p %s\n#SBATCH -J %s_msplit0\n#SBATCH -d singleton\n#SBATCH -t 1440\n#SBATCH -c 1\n#SBATCH --ntasks=1\ndate;\necho \"\"; cat %s/%s_msplit*_optdups.txt > %s/opt_dups.txt;cat %s/%s_msplit*_dups.txt > %s/dups.txt;cat %s/%s_msplit*_merged_nodups.txt > %s/merged_nodups.txt;\ndate\n", debugdir, debugdir, queue, groupname, dir, groupname, dir, dir, groupname, dir, dir, groupname, dir) > sscriptname;
-    sysstring = sprintf("sbatch %s", sscriptname);
+    sysstring = sprintf("sbatch -A %s %s", user, sscriptname);
     system(sysstring);
     close(sscriptname);
 
