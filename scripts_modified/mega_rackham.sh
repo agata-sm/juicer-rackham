@@ -150,8 +150,9 @@ printHelpAndExit() {
     exit "$1"
 }
 
-while getopts "d:g:hfs:y:S:l:L:q:Q:b:D:A" opt; do
+while getopts "A:d:g:hfs:y:S:l:L:q:Q:b:D" opt; do
     case $opt in
+  A) user=$OPTARG ;;
 	g) genomeID=$OPTARG ;;
 	h) printHelpAndExit 0;;
 	d) topDir=$OPTARG ;;
@@ -165,7 +166,6 @@ while getopts "d:g:hfs:y:S:l:L:q:Q:b:D:A" opt; do
 	Q) queue_time=$OPTARG ;;
 	b) ligation=$OPTARG ;;
 	D) juiceDir=$OPTARG ;;
-  A) user=$OPTARG ;;
 	[?]) printHelpAndExit 1;;
     esac
 done
@@ -590,8 +590,8 @@ then
     jid9=`sbatch <<- FINAL | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p ${queue}
-#SBATCH -t 5:00
-#SBATCH -c 1
+#SBATCH -t 2:00
+#SBATCH -n 1
 #SBATCH --ntasks=1
 #SBATCH -o $logdir/done-%j.out
 #SBATCH -e $logdir/done-%j.err
