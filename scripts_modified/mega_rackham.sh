@@ -173,7 +173,8 @@ done
 # allocation for job submission
 userstring="#SBATCH -A $user"
 
-echo "submission is $userstring"
+echo "submission allocation is ${userstring}"
+echo ""
 
 ## Set ligation junction based on restriction enzyme
 if [ -z "$ligation" ]; then
@@ -589,7 +590,7 @@ then
     jid9=`sbatch <<- FINAL | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
 #SBATCH -p ${queue}
-#SBATCH -t 100
+#SBATCH -t 5:00
 #SBATCH -c 1
 #SBATCH --ntasks=1
 #SBATCH -o $logdir/done-%j.out
