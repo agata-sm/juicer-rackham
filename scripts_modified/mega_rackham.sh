@@ -150,7 +150,7 @@ printHelpAndExit() {
     exit "$1"
 }
 
-while getopts "d:g:hfs:S:l:L:q:Q:b:D:A" opt; do
+while getopts "d:g:hfs:y:S:l:L:q:Q:b:D:A" opt; do
     case $opt in
 	g) genomeID=$OPTARG ;;
 	h) printHelpAndExit 0;;
