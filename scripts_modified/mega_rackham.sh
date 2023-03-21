@@ -126,10 +126,11 @@ genomeID="hg19"
 exclude=1
 
 ## Read arguments                                                     
-usageHelp="Usage: ${0##*/} [-A account name] -g genomeID [-d topDir] [-s site] [-S stage] [-b ligation] [-D Juicer scripts directory] [-q queue] [-l long queue] [-Q queue time] [-L long queue time] [-f] [-h] "
+usageHelp="Usage: ${0##*/} [-A account name] -g genomeID [-d topDir] [-s site] [-y restriction site file] [-S stage] [-b ligation] [-D Juicer scripts directory] [-q queue] [-l long queue] [-Q queue time] [-L long queue time] [-f] [-h] "
 genomeHelp="   genomeID is either defined in the script, e.g. \"hg19\" or \"mm10\" or the path to the chrom.sizes file"
 dirHelp="   [topDir] is the top level directory (default \"$topDir\") and must contain links to all merged_nodups files underneath it"
 siteHelp="   [site] must be defined in the script, e.g.  \"HindIII\" or \"MboI\" (default \"$site\"); alternatively, this can be the restriction site file"
+siteFileHelp="* [restriction site file]: enter path for restriction site file (locations of\n  restriction sites in genome; can be generated with the script\n  misc/generate_site_positions.py)"
 stageHelp="* [stage]: must be one of \"final\", \"postproc\", or \"early\".\n    -Use \"final\" when the reads have been combined into merged_nodups but the\n     final stats and hic files have not yet been created.\n    -Use \"postproc\" when the hic files have been created and only\n     postprocessing feature annotation remains to be completed.\n    -Use \"early\" for an early exit, before the final creation of the stats and\n     hic files"
 ligationHelp="* [ligation junction]: use this string when counting ligation junctions"
 scriptDirHelp="* [Juicer scripts directory]: set the Juicer directory,\n  which should have scripts/ references/ and restriction_sites/ underneath it\n  (default ${juiceDir})"
@@ -141,6 +142,7 @@ printHelpAndExit() {
     echo "$genomeHelp"
     echo "$dirHelp"
     echo "$siteHelp"
+    echo "$siteFileHelp"
     echo "$stageHelp"
     echo "$ligationHelp"
     echo "$excludeHelp"
@@ -154,6 +156,7 @@ while getopts "d:g:hfs:S:l:L:q:Q:b:D:A" opt; do
 	h) printHelpAndExit 0;;
 	d) topDir=$OPTARG ;;
 	s) site=$OPTARG ;;
+  y) site_file=$OPTARG ;;
 	f) exclude=0 ;;
 	S) stage=$OPTARG ;;
 	l) long_queue=$OPTARG ;;
@@ -192,6 +195,7 @@ fi
 if [ -z "$site_file" ]
 then
     site_file="${juiceDir}/restriction_sites/${genomeID}_${site}.txt"
+    echo "$site_file"
 fi
 
 ## Check that site file exists, needed for fragment number for merged_nodups
