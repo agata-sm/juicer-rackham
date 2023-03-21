@@ -150,7 +150,7 @@ printHelpAndExit() {
     exit "$1"
 }
 
-while getopts "A:d:g:hfs:y:S:l:L:q:Q:b:D" opt; do
+while getopts "A:d:g:hfs:y:S:l:L:q:Q:b:D:" opt; do
     case $opt in
   A) user=$OPTARG ;;
   d) topDir=$OPTARG ;;
