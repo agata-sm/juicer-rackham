@@ -153,12 +153,12 @@ printHelpAndExit() {
 while getopts "A:d:g:hfs:y:S:l:L:q:Q:b:D" opt; do
     case $opt in
   A) user=$OPTARG ;;
+  d) topDir=$OPTARG ;;
 	g) genomeID=$OPTARG ;;
 	h) printHelpAndExit 0;;
-	d) topDir=$OPTARG ;;
+  f) exclude=0 ;;
 	s) site=$OPTARG ;;
   y) site_file=$OPTARG ;;
-	f) exclude=0 ;;
 	S) stage=$OPTARG ;;
 	l) long_queue=$OPTARG ;;
 	L) long_queue_time=$OPTARG ;;
