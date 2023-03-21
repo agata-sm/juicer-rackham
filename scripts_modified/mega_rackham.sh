@@ -174,6 +174,8 @@ done
 userstring="#SBATCH -A $user"
 
 echo "submission allocation is ${userstring}"
+echo "short queue is ${queue} ${queue_time}"
+echo "long queue is ${long_queue} ${long_queue_time}"
 echo ""
 
 ## Set ligation junction based on restriction enzyme
@@ -285,7 +287,7 @@ then
 #!/bin/bash -l
 #SBATCH -p ${queue}
 #SBATCH -t ${queue_time}
-#SBATCH -c 1
+#SBATCH -n 1
 #SBATCH --ntasks=1
 #SBATCH -o ${logdir}/topstats-%j.out
 #SBATCH -e ${logdir}/topstats-%j.err
@@ -312,7 +314,7 @@ TOPSTATS`
 #!/bin/bash -l
 #SBATCH -p ${long_queue}
 #SBATCH -t ${long_queue_time}
-#SBATCH -c 1
+#SBATCH -n 1
 #SBATCH --ntasks=1
 #SBATCH -o $logdir/merge-%j.out
 #SBATCH -e $logdir/merge-%j.err
@@ -362,7 +364,7 @@ then
 #!/bin/bash -l
 #SBATCH -p ${long_queue}
 #SBATCH -t ${long_queue_time}
-#SBATCH -c 1
+#SBATCH -n 1
 #SBATCH --ntasks=1
 #SBATCH -o $logdir/inter0-%j.out
 #SBATCH -e $logdir/inter0-%j.err
@@ -389,7 +391,7 @@ INTER0`
 #!/bin/bash -l
 #SBATCH -p ${long_queue}
 #SBATCH -t ${long_queue_time}
-#SBATCH -c 1
+#SBATCH -n 1
 #SBATCH --ntasks=1
 #SBATCH -o $logdir/inter30-%j.out
 #SBATCH -e $logdir/inter30-%j.err
@@ -415,7 +417,7 @@ INTER30`
 #!/bin/bash -l
 #SBATCH -p ${long_queue}
 #SBATCH -t ${long_queue_time}
-#SBATCH -c 8
+#SBATCH -n 1
 #SBATCH --ntasks=1
 #SBATCH -o $logdir/hic0-%j.out
 #SBATCH -e $logdir/hic0-%j.err
@@ -448,7 +450,7 @@ HIC0`
 #!/bin/bash -l
 #SBATCH -p ${long_queue}
 #SBATCH -t ${long_queue_time}
-#SBATCH -c 1
+#SBATCH -n 1
 #SBATCH --ntasks=1
 #SBATCH -o $logdir/hic30-%j.out
 #SBATCH -e $logdir/hic30-%j.err
