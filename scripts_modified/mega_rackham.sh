@@ -173,7 +173,7 @@ done
 # allocation for job submission
 userstring="#SBATCH -A $user"
 
-
+echo "submission is $userstring"
 
 ## Set ligation junction based on restriction enzyme
 if [ -z "$ligation" ]; then
@@ -282,12 +282,12 @@ then
 
     jid1=`sbatch <<- TOPSTATS | egrep -o -e "\b[0-9]+$"
 #!/bin/bash -l
-#SBATCH -p $queue
-#SBATCH -t 1440
+#SBATCH -p ${queue}
+#SBATCH -t ${queue_time}
 #SBATCH -c 1
 #SBATCH --ntasks=1
-#SBATCH -o $logdir/topstats-%j.out
-#SBATCH -e $logdir/topstats-%j.err
+#SBATCH -o ${logdir}/topstats-%j.out
+#SBATCH -e ${logdir}/topstats-%j.err
 #SBATCH -J "${groupname}_topstats"
 #SBATCH --mem-per-cpu=32G 
 $userstring
